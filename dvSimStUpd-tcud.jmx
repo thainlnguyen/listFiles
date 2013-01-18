@@ -9,17 +9,17 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="_baseurl" elementType="Argument">
             <stringProp name="Argument.name">_baseurl</stringProp>
-            <stringProp name="Argument.value">qa35-sim.t8.intusurg.com</stringProp>
+            <stringProp name="Argument.value">qa36-dv.t8.intusurg.com</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="baseurl" elementType="Argument">
             <stringProp name="Argument.name">baseurl</stringProp>
-            <stringProp name="Argument.value">qa36-dv.t8.intusurg.com</stringProp>
+            <stringProp name="Argument.value">qa35-sim.t8.intusurg.com</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="threads" elementType="Argument">
             <stringProp name="Argument.name">threads</stringProp>
-            <stringProp name="Argument.value">${__P(dvClients,3)}</stringProp>
+            <stringProp name="Argument.value">${__P(dvClients,10)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="rampUp" elementType="Argument">
@@ -29,7 +29,7 @@
           </elementProp>
           <elementProp name="statusLoop" elementType="Argument">
             <stringProp name="Argument.name">statusLoop</stringProp>
-            <stringProp name="Argument.value">${__P(statusLoop,5)}</stringProp>
+            <stringProp name="Argument.value">${__P(statusLoop,15)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -39,14 +39,14 @@
     <hashTree>
       <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
         <collectionProp name="Arguments.arguments">
-          <elementProp name="pathStatus" elementType="Argument">
-            <stringProp name="Argument.name">pathStatus</stringProp>
+          <elementProp name="_pathStatus" elementType="Argument">
+            <stringProp name="Argument.name">_pathStatus</stringProp>
             <stringProp name="Argument.value">/g2</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
             <stringProp name="Argument.desc">submit status updates</stringProp>
           </elementProp>
-          <elementProp name="pathLogs" elementType="Argument">
-            <stringProp name="Argument.name">pathLogs</stringProp>
+          <elementProp name="_pathLogs" elementType="Argument">
+            <stringProp name="Argument.name">_pathLogs</stringProp>
             <stringProp name="Argument.value">/g2/logs</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
             <stringProp name="Argument.desc">upload log files</stringProp>
@@ -73,6 +73,18 @@
             <stringProp name="Argument.name">jMeterExt</stringProp>
             <stringProp name="Argument.value">${__P(user.dir,)}${__BeanShell(File.separator,)}lib${__BeanShell(File.separator,)}ext</stringProp>
             <stringProp name="Argument.desc">jmeter/lib/ext (error: needs fixing)</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="pathStatus" elementType="Argument">
+            <stringProp name="Argument.name">pathStatus</stringProp>
+            <stringProp name="Argument.value">/c6sim/status</stringProp>
+            <stringProp name="Argument.desc">pointing to new environment</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="pathLogs" elementType="Argument">
+            <stringProp name="Argument.name">pathLogs</stringProp>
+            <stringProp name="Argument.value">/c6sim/logs</stringProp>
+            <stringProp name="Argument.desc">pointing to new environment</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -182,17 +194,17 @@
           <stringProp name="TestPlan.comments">&gt;&gt;&gt; This is a global counter for how many dvClients are running; so &quot;Track counter independetly...&quot; is unchecked!</stringProp>
         </CounterConfig>
         <hashTree/>
-        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop me" enabled="true">
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Status Loop Index" enabled="true">
           <boolProp name="LoopController.continue_forever">true</boolProp>
           <stringProp name="LoopController.loops">${statusLoop}</stringProp>
         </LoopController>
         <hashTree>
-          <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="create/update" enabled="true">
+          <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="update/upload requests" enabled="true">
             <collectionProp name="ModuleController.node_path">
               <stringProp name="-1227702913">WorkBench</stringProp>
               <stringProp name="764597751">Test Plan</stringProp>
               <stringProp name="-1927887215">action storage</stringProp>
-              <stringProp name="1213941453">TC: Submit status requests only</stringProp>
+              <stringProp name="875285336">TC: Cleaner status/upload algorhitm</stringProp>
             </collectionProp>
           </ModuleController>
           <hashTree/>
@@ -206,7 +218,7 @@
           </collectionProp>
         </ModuleController>
         <hashTree/>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -338,21 +350,33 @@
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">&lt;?xml version=&quot;1.0&quot;?&gt;&#xd;
 &lt;root&gt;&#xd;
-     &lt;cmd&gt;&#xd;
-          &lt;id&gt;statusUpdate&lt;/id&gt;&#xd;
-          &lt;systemName&gt;${dvName}&lt;/systemName&gt;&#xd;
-          &lt;overallSoftwareRelease&gt;XA.A60.080.456.789a&lt;/overallSoftwareRelease&gt;&#xd;
-          &lt;errorState&gt;${errStateCnt}&lt;/errorState&gt;&#xd;
-          &lt;mode&gt;automated&lt;/mode&gt;&#xd;
-          &lt;modeStatus&gt;homed&lt;/modeStatus&gt;&#xd;
-          &lt;certExpire&gt;12/31/2017 12:00:00&lt;/certExpire&gt;&#xd;
-          &lt;dvconnectstatus&gt;A1&lt;/dvconnectstatus&gt;&#xd;
-          &lt;Optional&gt;&#xd;
-               &lt;LL_RR_status1&gt;3&lt;/LL_RR_status1&gt;&#xd;
-               &lt;STU1&gt;This is STU&lt;/STU1&gt;&#xd;
-          &lt;/Optional&gt;&#xd;
-     &lt;/cmd&gt;&#xd;
-&lt;/root&gt;</stringProp>
+	&lt;cmd&gt;&#xd;
+		&lt;id&gt;SimStatusUpdate&lt;/id&gt;&#xd;
+		&lt;SystemName&gt;${dvName}&lt;/SystemName&gt;&#xd;
+		&lt;SSCSerialNumber&gt;282220&lt;/SSCSerialNumber&gt;&#xd;
+		&lt;CoreSoftwareRelease&gt;XA.C60.062.062.062a&lt;/CoreSoftwareRelease&gt;&#xd;
+		&lt;SSCSoftwareRelease&gt;XA.A60.179.179.179a&lt;/SSCSoftwareRelease&gt;&#xd;
+		&lt;EPCSoftwareRelease&gt;XA.A60.179.179.179a&lt;/EPCSoftwareRelease&gt;&#xd;
+		&lt;CoreError&gt;${errStateCnt}&lt;/CoreError&gt;&#xd;
+		&lt;CoreMode&gt;NONE&lt;/CoreMode&gt;&#xd;
+		&lt;CoreModeStatus&gt;NONE&lt;/CoreModeStatus&gt;&#xd;
+		&lt;EPCError&gt;NONE&lt;/EPCError&gt;&#xd;
+		&lt;EPCState&gt;NONE&lt;/EPCState&gt;&#xd;
+		&lt;Package&gt;&#xd;
+			&lt;PackageId&gt;2&lt;/PackageId&gt;&#xd;
+			&lt;PackageState&gt;UPLOAD_COMPLETED&lt;/PackageState&gt;&#xd;
+			&lt;PackageData&gt;Data related to package it could be xml data or binary data.&lt;/PackageData&gt;&#xd;
+			&lt;PackageProgress&gt;GOOD&lt;/PackageProgress&gt;&#xd;
+			&lt;PackageErrorCode&gt;0&lt;/PackageErrorCode&gt;&#xd;
+			&lt;PackageErrorString&gt;NONE&lt;/PackageErrorString&gt;&#xd;
+			&lt;PackageStateFlag&gt;1&lt;/PackageStateFlag&gt;&#xd;
+		&lt;/Package&gt;&#xd;
+		&lt;Optional&gt;&#xd;
+			&lt;LL_RR_status&gt;1&lt;/LL_RR_status&gt;&#xd;
+		&lt;/Optional&gt;&#xd;
+	&lt;/cmd&gt;&#xd;
+&lt;/root&gt;&#xd;
+</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
               </collectionProp>
@@ -363,7 +387,7 @@
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">${pathStatus}/status?SystemName=${dvName}&amp;Counter=${loopCnt}</stringProp>
+            <stringProp name="HTTPSampler.path">${pathStatus}?systemName=${dvName}&amp;Counter=${loopCnt}</stringProp>
             <stringProp name="HTTPSampler.method">POST</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -432,10 +456,6 @@
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
             </HTTPSamplerProxy>
             <hashTree>
-              <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="2s delay" enabled="true">
-                <stringProp name="ConstantTimer.delay">2000</stringProp>
-              </ConstantTimer>
-              <hashTree/>
               <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="assert: resend log file " enabled="true">
                 <collectionProp name="Asserion.test_strings">
                   <stringProp name="717078022">Success&lt;/BODY&gt;</stringProp>
@@ -445,43 +465,47 @@
                 <intProp name="Assertion.test_type">2</intProp>
               </ResponseAssertion>
               <hashTree/>
-              <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
-                <boolProp name="ResultCollector.error_logging">false</boolProp>
-                <objProp>
-                  <name>saveConfig</name>
-                  <value class="SampleSaveConfiguration">
-                    <time>true</time>
-                    <latency>true</latency>
-                    <timestamp>true</timestamp>
-                    <success>true</success>
-                    <label>true</label>
-                    <code>true</code>
-                    <message>false</message>
-                    <threadName>true</threadName>
-                    <dataType>false</dataType>
-                    <encoding>false</encoding>
-                    <assertions>false</assertions>
-                    <subresults>false</subresults>
-                    <responseData>false</responseData>
-                    <samplerData>false</samplerData>
-                    <xml>false</xml>
-                    <fieldNames>true</fieldNames>
-                    <responseHeaders>false</responseHeaders>
-                    <requestHeaders>false</requestHeaders>
-                    <responseDataOnError>false</responseDataOnError>
-                    <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
-                    <assertionsResultsToSave>0</assertionsResultsToSave>
-                    <bytes>true</bytes>
-                    <hostname>true</hostname>
-                    <threadCounts>true</threadCounts>
-                    <sampleCount>true</sampleCount>
-                  </value>
-                </objProp>
-                <stringProp name="filename"></stringProp>
-              </ResultCollector>
-              <hashTree/>
             </hashTree>
+            <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="3s delay" enabled="true">
+              <stringProp name="ConstantTimer.delay">3000</stringProp>
+            </ConstantTimer>
+            <hashTree/>
           </hashTree>
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>false</message>
+                <threadName>true</threadName>
+                <dataType>false</dataType>
+                <encoding>false</encoding>
+                <assertions>false</assertions>
+                <subresults>false</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <hostname>true</hostname>
+                <threadCounts>true</threadCounts>
+                <sampleCount>true</sampleCount>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
         </hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="create/update" enabled="false"/>
         <hashTree>
